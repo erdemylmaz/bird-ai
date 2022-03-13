@@ -1,11 +1,13 @@
 // Canvas
-const canvasDIV = document.querySelector(".canvas");
+const canvasDIV = document.querySelector(".snake-canvas");
 const ctx = canvasDIV.getContext("2d");
 
+let screenWidth = window.innerWidth;
+
 class Canvas {
-  width = 900;
-  height = 900;
-  bgColor = "#000";
+  width = 900; //900
+  height = 900; //900
+  bgColor = "#fff";
 }
 
 class Snake {
@@ -17,6 +19,7 @@ class Snake {
   posY = 10;
 
   movementSize = 5;
+  color = "#999";
 
   checkWin() {
     if (snake.posX == apple.posX && snake.posY == apple.posY) {
@@ -29,7 +32,7 @@ class Snake {
 
   //   Movements
   goLeft() {
-    ctx.fillStyle = "#999";
+    ctx.fillStyle = snake.color;
     ctx.clearRect(snake.posX, snake.posY, snake.width, snake.height);
     snake.posX -= snake.movementSize;
 
@@ -42,7 +45,7 @@ class Snake {
   }
 
   goRight() {
-    ctx.fillStyle = "#999";
+    ctx.fillStyle = snake.color;
     ctx.clearRect(snake.posX, snake.posY, snake.width, snake.height);
     snake.posX += snake.movementSize;
 
@@ -55,7 +58,7 @@ class Snake {
   }
 
   goUp() {
-    ctx.fillStyle = "#999";
+    ctx.fillStyle = snake.color;
     ctx.clearRect(snake.posX, snake.posY, snake.width, snake.height);
     snake.posY -= snake.movementSize;
 
@@ -68,7 +71,7 @@ class Snake {
   }
 
   goDown() {
-    ctx.fillStyle = "#999";
+    ctx.fillStyle = snake.color;
     ctx.clearRect(snake.posX, snake.posY, snake.width, snake.height);
     snake.posY += snake.movementSize;
 
@@ -89,6 +92,7 @@ class Apple {
   height = 5;
 
   count = 0;
+  color = "#555";
 
   createApple() {
     let randomX = Math.floor(Math.random() * 290);
@@ -115,7 +119,7 @@ class Apple {
 
     apple.posY = randomY;
 
-    ctx.fillStyle = "#555";
+    ctx.fillStyle = apple.color;
     ctx.fillRect(apple.posX, apple.posY, apple.width, apple.height);
   }
 }
@@ -128,37 +132,69 @@ class AI {
     apple.createApple();
   }
 
+  // calculates closest way
   makeDecide() {
+    let width = 295;
+    let height = 145;
+
+    // let normal way = appleposx - snakeposx
+    // if snakeposx + (width - appleposx) <= normal way
+
+    // snake        apple
     if (snake.posX < apple.posX) {
-      if (apple.posX - snake.posX >= 140) {
+      let normalWay = apple.posX - snake.posX;
+      let otherWay = snake.posX + (width - apple.posX);
+      if (otherWay < normalWay) {
         snake.goLeft();
       } else {
         snake.goRight();
       }
+
+      // console.log("normalX:", normalWay, "otherX", otherWay);
     }
 
+    // apple      snake
     if (snake.posX > apple.posX) {
-      if (snake.posX - apple.posX >= 140) {
+      let normalWay = snake.posX - apple.posX;
+      let otherWay = width - snake.posX + apple.posX;
+      if (otherWay < normalWay) {
         snake.goRight();
       } else {
         snake.goLeft();
       }
+
+      // console.log("normalX:", normalWay, "otherX", otherWay);
     }
 
+    // snake
+    //
+    // apple
     if (snake.posY < apple.posY) {
-      if (apple.posY - snake.posY >= 70) {
+      let normalWay = apple.posY - snake.posY;
+      let otherWay = snake.posY + (height - apple.posY);
+
+      if (otherWay < normalWay) {
         snake.goUp();
       } else {
         snake.goDown();
       }
+
+      // console.log("normalY:", normalWay, "otherY", otherWay);
     }
 
+    // apple
+    //
+    // snake
     if (snake.posY > apple.posY) {
-      if (snake.posY - apple.posY >= 70) {
+      let normalWay = snake.posY - apple.posY;
+      let otherWay = height - snake.posY + apple.posY;
+      if (otherWay < normalWay) {
         snake.goDown();
       } else {
         snake.goUp();
       }
+
+      // console.log("normalY:", normalWay, "otherY", otherWay);
     }
   }
 }
@@ -168,7 +204,17 @@ const snake = new Snake();
 const apple = new Apple();
 const ai = new AI();
 
+if (innerWidth <= 1000) {
+  canvas.width = 400;
+  canvas.height = 400;
+}
+
 setInterval(ai.makeDecide, 1000 / 30);
+
+setInterval(() => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  apple.createApple();
+}, 10000);
 
 canvasDIV.style.width = `${canvas.width}px`;
 canvasDIV.style.height = `${canvas.height}px`;
@@ -188,9 +234,8 @@ document.addEventListener("keydown", (e) => {
 });
 
 // Snake
-ctx.fillStyle = "#999";
+ctx.fillStyle = snake.color;
 ctx.fillRect(snake.posX, snake.posY, snake.width, snake.height);
 
 // apple
-ctx.fillStyle = "#555";
-ctx.fillRect(apple.posX, apple.posY, apple.width, apple.height);
+apple.createApple();

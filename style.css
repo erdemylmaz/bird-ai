@@ -34,10 +34,16 @@
   --darkbackground: #1a1a1a;
 }
 
-.canvas {
+.snake-canvas {
   position: absolute;
+  z-index: -1;
   background-color: transparent;
-  top: 0;
+  bottom: 24px;
+}
+
+.bird-canvas {
+  position: absolute;
+  z-index: -1;
 }
 
 html {
@@ -48,6 +54,11 @@ img[alt="www.000webhost.com"] {
   width: 0;
   height: 0;
   display: none;
+}
+.disclaimer {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 body {
@@ -144,6 +155,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 .container-text::before {
@@ -241,6 +253,8 @@ body {
   justify-content: center;
   width: 256px;
   margin-top: 24px;
+  margin-left: 8px;
+  margin-right: 8px;
   padding: 0 16px;
   height: 16vh;
   border-radius: 8px;
@@ -346,3 +360,50 @@ body {
 
   transition: 500ms ease-in-out;
 } */
+
+@media only screen and (max-width: 1000px) {
+  .ery {
+    font-size: 14px;
+    width: 48px;
+    height: 24px;
+  }
+
+  .link {
+    font-size: 14px;
+  }
+
+  body {
+    font-size: 14px;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .canvas {
+    width: 400px;
+  }
+
+  .container-text {
+    font-size: 16px;
+  }
+
+  .projects {
+    width: 150%;
+  }
+
+  .project {
+    width: 50%;
+    font-size: 14px;
+  }
+
+  .project-title {
+    font-size: 16px;
+  }
+
+  .project-about {
+    font-size: 14px;
+  }
+
+  .projects-title {
+    font-size: 20px;
+  }
+}
